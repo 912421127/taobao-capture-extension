@@ -27,23 +27,6 @@ export default defineContentScript({
         const pageUrl = window.location.href || '';
         let itemId = '';
         itemId = new URL(pageUrl).searchParams.get('id') || itemId;
-        console.log({
-            pageUrl,
-            platform: pageUrl.includes('tmall.com') ? 'tmall' : 'taobao',
-            itemId,
-            title: info.标题,
-            shopName: info.店铺,
-            finalPrice: info.价格,
-            mainPicUrls: info.主图,
-            detailPicUrls: info.详情,
-            skus: 商品信息.map(sku => ({
-                skuId: sku.规格编号,
-                specName: sku.规格名称,
-                priceText: sku.到手价,
-                stockText: sku.库存
-            })),
-            raw: data
-        });
         // return;
         await saveCapture({
             pageUrl,
