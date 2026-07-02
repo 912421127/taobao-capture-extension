@@ -1,0 +1,120 @@
+/*
+  这个文件是 popup 的样式。
+  样式尽量朴素，方便你后续直接改颜色、间距、按钮样式。
+*/
+
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    width: 380px;
+    min-height: 180px;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #1f2933;
+    background: #f7f8fa;
+  }
+  
+  .page {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+  }
+  
+  .page-header {
+    display: block;
+  }
+  
+  .page-header h1 {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  
+  .page-header p {
+    margin: 0;
+    font-size: 12px;
+    color: #667085;
+  }
+  
+  .primary-button {
+    width: 100%;
+    height: 38px;
+    border: 0;
+    border-radius: 6px;
+    color: #ffffff;
+    background: #1677ff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .primary-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+  
+  .message {
+    margin: 0;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: #e8f3ff;
+    color: #1554ad;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  
+  .message-error {
+    background: #fff1f0;
+    color: #cf1322;
+  }
+  
+  .result-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .result-panel h2 {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #1f2933;
+  }
+  
+  .sku-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border: 1px solid #e4e7ec;
+    border-radius: 6px;
+    background: #ffffff;
+    font-size: 12px;
+  }
+  
+  .sku-table th,
+  .sku-table td {
+    padding: 8px;
+    border-bottom: 1px solid #e4e7ec;
+    text-align: left;
+    vertical-align: top;
+  }
+  
+  .sku-table th {
+    color: #475467;
+    background: #f2f4f7;
+    font-weight: 600;
+  }
+  
+  .sku-table tr:last-child td {
+    border-bottom: 0;
+  }
+  
+  .empty-text {
+    margin: 0;
+    color: #667085;
+    font-size: 12px;
+  }
+  
