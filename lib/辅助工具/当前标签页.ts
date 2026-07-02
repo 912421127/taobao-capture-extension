@@ -17,7 +17,7 @@ const 标签页发送变化 = () => {
       active: true,
       lastFocusedWindow: true,
     },
-    (tabs) => {
+    (tabs: chrome.tabs.Tab[]) => {
       if (tabs.length === 0) {
         return;
       }
@@ -29,7 +29,7 @@ const 标签页发送变化 = () => {
   );
 };
 
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+chrome.tabs.onUpdated.addListener(async (tabId: number, changeInfo: { url?: string }) => {
   if (tabId === 当前标签页.value?.id) {
     if (changeInfo.url != undefined) {
       当前标签页链接.value = changeInfo.url;

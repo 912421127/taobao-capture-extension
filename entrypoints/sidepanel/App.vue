@@ -51,6 +51,8 @@
 </template>
 <script lang="ts">
 import { 当前标签页, 当前标签页链接 } from '@/lib/辅助工具/当前标签页';
+import { saveCapture } from '@/src/api/capture-api';
+import { message } from 'ant-design-vue';
 import { ref, reactive } from 'vue';
 import { searchTaobao, 从淘宝商品前端数据查询 } from '../../src/taobao-original';
 export default {
@@ -123,6 +125,42 @@ export default {
             this.mainPicUrls = 详情页商品数据?.主图 || [];
             this.picUrls = 详情页商品数据?.详情 || [];
             this.商品信息.店铺 = 详情页商品数据?.店铺 || '';
+
+            // 页面展示成功后，再把本次采集快照保存到本机 Docker 后端。
+            // 保存失败只提示，不影响你继续查看页面上的提取结果。
+            try {
+                const pageUrl = tab.url || this.当前标签页链接 || '';
+                let itemId = this.商品ID || '';
+
+                try {
+                    itemId = new URL(pageUrl).searchParams.get('id') || itemId;
+                } catch {
+                    // 极少数情况下浏览器拿不到标准 URL，这时不影响保存其他字段。
+                }
+
+                await saveCapture({
+                    pageUrl,
+                    platform: pageUrl.includes('tmall.com') ? 'tmall' : 'taobao',
+                    itemId,
+                    title: this.title,
+                    shopName: this.商品信息.店铺,
+                    finalPrice: this.finalPrice,
+                    mainPicUrls: this.mainPicUrls,
+                    detailPicUrls: this.picUrls,
+                    skus: this.sku信息.map(sku => ({
+                        skuId: sku.规格编号,
+                        specName: sku.规格名称,
+                        priceText: sku.到手价,
+                        stockText: sku.库存
+                    })),
+                    raw: 商品前端数据
+                });
+
+                message.success('已保存到数据库');
+            } catch (error) {
+                console.error('保存数据库失败：', error);
+                message.error('提取成功，但保存数据库失败，请确认 Docker 服务已启动');
+            }
         },
         async downloadImg(urls: string[], prefix: string = '') {
             urls.forEach((imgUrl, index) => {

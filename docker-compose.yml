@@ -1,0 +1,38 @@
+services:
+    postgres:
+        image: postgres:16-alpine
+        container_name: taobao-capture-postgres
+        environment:
+            POSTGRES_DB: taobao_capture
+            POSTGRES_USER: taobao
+            POSTGRES_PASSWORD: taobao123
+        ports:
+            - '5432:5432'
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+            - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U taobao -d taobao_capture']
+            interval: 5s
+            timeout: 5s
+            retries: 10
+
+    backend:
+        build:
+            context: ./backend
+        container_name: taobao-capture-backend
+        depends_on:
+            postgres:
+                condition: service_healthy
+        environment:
+            PORT: 3001
+            PGHOST: postgres
+            PGPORT: 5432
+            PGDATABASE: taobao_capture
+            PGUSER: taobao
+            PGPASSWORD: taobao123
+        ports:
+            - '3001:3001'
+
+volumes:
+    postgres-data:

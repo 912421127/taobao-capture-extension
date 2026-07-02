@@ -6,6 +6,7 @@ declare namespace chrome {
   namespace tabs {
     interface Tab {
       id?: number;
+      url?: string;
     }
   }
 }
