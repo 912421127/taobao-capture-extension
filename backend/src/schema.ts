@@ -23,7 +23,7 @@ export const captureSkus = pgTable(
             .references(() => captures.id, { onDelete: 'cascade' }),
         skuId: text('sku_id').notNull().default(''),
         specName: text('spec_name').notNull().default(''),
-        sku_price: real('price').notNull().default(0),
+        skuPrice: real('price').notNull().default(0),
         stockText: text('stock_text').notNull().default('')
     },
     table => ({

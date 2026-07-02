@@ -20,6 +20,7 @@ services:
         build:
             context: ./backend
         container_name: taobao-capture-backend
+        command: sh -c "npm run db:push && npm start"
         depends_on:
             postgres:
                 condition: service_healthy
