@@ -18,9 +18,15 @@ export type CapturePayload = {
     raw: unknown;
 };
 
+export type SaveCaptureResult = {
+    ok: true;
+    id: number;
+    created: boolean;
+    priceSnapshotCount: number;
+};
+
 const API_BASE_URL = 'http://localhost:3001';
 
-// 把采集到的商品数据发送给本机 Docker 后端，由后端写入 PostgreSQL。
 export async function saveCapture(payload: CapturePayload) {
     const response = await fetch(`${API_BASE_URL}/api/captures`, {
         method: 'POST',
@@ -39,5 +45,5 @@ export async function saveCapture(payload: CapturePayload) {
         throw new Error(result.message || '后端保存失败');
     }
 
-    return result as { ok: true; id: number };
+    return result as SaveCaptureResult;
 }

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "tsx src/server.ts",
+    "test": "tsx --test src/**/*.test.ts",
     "typecheck": "tsc --noEmit",
     "db:push": "drizzle-kit push"
   },

@@ -54,4 +54,7 @@ docker compose exec postgres psql -U taobao -d taobao_capture
 select * from captures order by id desc;
 select * from capture_skus order by id desc;
 select * from capture_images order by id desc;
+select item_id, sku_id, price, price_text, stock_text, captured_at
+from sku_price_snapshots
+order by captured_at desc;
 ```

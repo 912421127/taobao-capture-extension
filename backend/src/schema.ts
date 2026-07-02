@@ -1,19 +1,24 @@
-import { bigint, bigserial, index, integer, jsonb, pgTable, text, timestamp, real } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { bigint, bigserial, index, integer, jsonb, pgTable, real, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 
-// 商品采集主表。字段名和数据库列名在这里统一映射，业务代码只使用更友好的驼峰命名。
-export const captures = pgTable('captures', {
-    id: bigserial('id', { mode: 'number' }).primaryKey(),
-    pageUrl: text('page_url').notNull().default(''),
-    platform: text('platform').notNull().default('taobao'),
-    itemId: text('item_id').notNull().default(''),
-    title: text('title').notNull().default(''),
-    shopName: text('shop_name').notNull().default(''),
-    finalPrice: text('final_price').notNull().default(''),
-    rawData: jsonb('raw_data').notNull().default({}),
-    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
-});
+export const captures = pgTable(
+    'captures',
+    {
+        id: bigserial('id', { mode: 'number' }).primaryKey(),
+        pageUrl: text('page_url').notNull().default(''),
+        platform: text('platform').notNull().default('taobao'),
+        itemId: text('item_id').notNull().default(''),
+        title: text('title').notNull().default(''),
+        shopName: text('shop_name').notNull().default(''),
+        finalPrice: text('final_price').notNull().default(''),
+        rawData: jsonb('raw_data').notNull().default({}),
+        createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+    },
+    table => ({
+        productUniqueIdx: uniqueIndex('idx_captures_platform_item_id_unique').on(table.platform, table.itemId)
+    })
+);
 
-// SKU 明细表。通过 captureId 关联到一次采集快照。
 export const captureSkus = pgTable(
     'capture_skus',
     {
@@ -31,7 +36,6 @@ export const captureSkus = pgTable(
     })
 );
 
-// 图片明细表。主图和详情图放在同一张表，用 imageType 区分。
 export const captureImages = pgTable(
     'capture_images',
     {
@@ -45,5 +49,27 @@ export const captureImages = pgTable(
     },
     table => ({
         captureIdIdx: index('idx_capture_images_capture_id').on(table.captureId)
+    })
+);
+
+export const skuPriceSnapshots = pgTable(
+    'sku_price_snapshots',
+    {
+        id: bigserial('id', { mode: 'number' }).primaryKey(),
+        captureId: bigint('capture_id', { mode: 'number' })
+            .notNull()
+            .references(() => captures.id, { onDelete: 'cascade' }),
+        platform: text('platform').notNull().default('taobao'),
+        itemId: text('item_id').notNull().default(''),
+        skuId: text('sku_id').notNull().default(''),
+        specName: text('spec_name').notNull().default(''),
+        skuPrice: real('price').notNull().default(0),
+        priceText: text('price_text').notNull().default(''),
+        stockText: text('stock_text').notNull().default(''),
+        capturedAt: timestamp('captured_at').notNull().default(sql`timezone('Asia/Shanghai', now())`)
+    },
+    table => ({
+        itemSkuTimeIdx: index('idx_sku_price_snapshots_item_sku_time').on(table.itemId, table.skuId, table.capturedAt),
+        captureIdIdx: index('idx_sku_price_snapshots_capture_id').on(table.captureId)
     })
 );
