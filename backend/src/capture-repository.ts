@@ -45,7 +45,7 @@ export async function saveCapture(payload: CapturePayload): Promise<number> {
             captureId,
             skuId: sku.skuId || '',
             specName: sku.specName || '',
-            priceText: sku.priceText || '',
+            skuPrice: parseFloat(sku.priceText || '0'),
             stockText: sku.stockText || ''
         }));
 

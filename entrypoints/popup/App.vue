@@ -1,6 +1,6 @@
 <template>
     <main class="page">
-        <Button type="primary" @click="openSidePanel">打开侧边栏</Button>
+        <!-- <Button type="primary" @click="openSidePanel">打开侧边栏</Button> -->
     </main>
 </template>
 

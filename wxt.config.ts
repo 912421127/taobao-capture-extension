@@ -102,5 +102,8 @@ export default defineConfig({
     // WXT 本身使用 Vite 打包；这里把 Vue 插件加进去，popup 就能使用 .vue 单文件组件。
     vite: () => ({
         plugins: [vue()]
-    })
+    }),
+    webExt: {
+        disabled: true
+    }
 });

@@ -1,4 +1,4 @@
-import { bigint, bigserial, index, integer, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { bigint, bigserial, index, integer, jsonb, pgTable, text, timestamp, real } from 'drizzle-orm/pg-core';
 
 // 商品采集主表。字段名和数据库列名在这里统一映射，业务代码只使用更友好的驼峰命名。
 export const captures = pgTable('captures', {
@@ -23,7 +23,7 @@ export const captureSkus = pgTable(
             .references(() => captures.id, { onDelete: 'cascade' }),
         skuId: text('sku_id').notNull().default(''),
         specName: text('spec_name').notNull().default(''),
-        priceText: text('price_text').notNull().default(''),
+        sku_price: real('price').notNull().default(0),
         stockText: text('stock_text').notNull().default('')
     },
     table => ({
